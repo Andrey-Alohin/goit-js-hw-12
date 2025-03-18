@@ -33,6 +33,8 @@ async function processingUserRequest(event) {
   event.preventDefault();
   disableLoadBtn();
   clearGallery();
+  page = 1;
+  countOfPages = 1;
   const userRequest = userForm
     .querySelector('[name="search-text"]')
     .value.trim();
@@ -42,11 +44,12 @@ async function processingUserRequest(event) {
     try {
       const response = await apiRequest(userRequest, page);
       if (response.hits.length !== 0) {
-        page = 1;
         stopLoader();
         if (response.totalHits > 15) {
           countOfPages = response.totalHits / 15;
           activeLoadBtn();
+        } else {
+          disableLoadBtn();
         }
         renderRequest(response.hits, gallery);
         return;
@@ -84,17 +87,20 @@ loadBtn.addEventListener('click', renderMoreImages);
 
 async function renderMoreImages(event) {
   event.preventDefault();
+  startLoader();
   page += 1;
   const item = document.querySelector('.item').getBoundingClientRect();
   const response = await apiRequest(gUserRequest, page);
   try {
     if (page <= countOfPages) {
       renderRequest(response.hits, gallery);
+      stopLoader();
       window.scrollBy({
         top: item.height * 2,
         behavior: 'smooth',
       });
     } else {
+      stopLoader();
       disableLoadBtn();
       renderRequest(response.hits, gallery);
       window.scrollBy({

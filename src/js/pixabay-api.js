@@ -2,7 +2,7 @@ import axios from 'axios';
 // axios Settings
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 const myApiKey = '49354290-35d6e1dc5d842ed86975730ff';
-const axiosOptions = (key, page = 1) => {
+const axiosOptions = (key, page) => {
   const params = {
     params: {
       key: myApiKey,

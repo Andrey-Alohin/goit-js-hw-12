@@ -19,6 +19,5 @@ const axiosOptions = (key, page = 1) => {
 
 export async function apiRequest(requestKey, page) {
   const response = await axios.get('', axiosOptions(requestKey, page));
-  console.log(`${response} обробка запиту`);
   return response.data;
 }

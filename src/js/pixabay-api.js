@@ -2,7 +2,7 @@ import axios from 'axios';
 // axios Settings
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 const myApiKey = '49354290-35d6e1dc5d842ed86975730ff';
-const axiosOptions = key => {
+const axiosOptions = (key, page = 1) => {
   const params = {
     params: {
       key: myApiKey,
@@ -10,29 +10,15 @@ const axiosOptions = key => {
       image_type: 'photo',
       orientation: 'horizontal',
       safesearch: true,
-      per_page: 40,
+      per_page: 15,
+      page: page,
     },
   };
   return params;
 };
 
-export function apiRequest(requestKey) {
-  return new Promise((resolve, reject) => {
-    axios
-      .get('', axiosOptions(requestKey))
-      .then(response => {
-        if (response.data.total !== 0) {
-          resolve(response.data.hits);
-          return;
-        } else {
-          reject(
-            `Sorry, there are no images matching your ${requestKey}. Please try again!`
-          );
-          return;
-        }
-      })
-      .catch(response => {
-        reject(response.message);
-      });
-  });
+export async function apiRequest(requestKey, page) {
+  const response = await axios.get('', axiosOptions(requestKey, page));
+  console.log(`${response} обробка запиту`);
+  return response.data;
 }
